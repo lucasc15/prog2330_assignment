@@ -1,0 +1,46 @@
+@model IEnumerable<LCBusService.Models.BusRoute>
+
+<h2>@ViewData["Title"]</h2>
+
+@if (ViewData["message"] != null)
+{
+    <p class="alert-danger">@ViewData["message"]</p>
+}
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               @Html.DisplayNameFor(model => model.BusRouteCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RouteName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusRouteCode)
+            </td>
+            <td>
+                @Html.ActionLink(item.RouteName.ToString(), "Index", "RouteStops", new { busroutecode = item.BusRouteCode }, null)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BusRouteCode">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BusRouteCode">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BusRouteCode">Delete</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@{ if (ViewData["BusStopRouteList"] != null)
+            {
+        <a asp-action="Index">Return to Bus Stops View</a>
+    }
+}

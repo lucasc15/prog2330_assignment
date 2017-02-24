@@ -1,0 +1,56 @@
+@model IEnumerable<LCBusService.Models.BusStop>
+
+@{
+    ViewData["Title"] = ViewData["Header"] + " Listing - LCBusService";
+}
+<h2>@ViewData["Header"]</h2>
+@{ if (ViewData["message"] != null)
+    {
+    <p class="alert-danger">@ViewData["message"]</p> 
+    }
+}
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.BusStopNumber), "Index", "BusStops", new { orderby = "busstopnumber" }, null)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoingDowntown)
+            </th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.Location), "Index", "BusStops", new { orderby = "location" }, null)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationHash)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="RouteSelector" asp-route-id="@item.BusStopNumber">@Html.DisplayFor(modelItem => item.BusStopNumber)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoingDowntown)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocationHash)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BusStopNumber">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BusStopNumber">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BusStopNumber">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
