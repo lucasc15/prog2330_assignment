@@ -38,7 +38,6 @@ namespace LCBusService
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
-
             services.AddMvc();
             // Add the DB context from appsettings.json file 
             string connectionString = Configuration["Database:connection"];

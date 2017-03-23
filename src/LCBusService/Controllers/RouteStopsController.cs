@@ -37,7 +37,7 @@ namespace LCBusService.Controllers
                 Where(r => r.BusRouteCode == busRouteCode).
                 OrderBy(r => r.OffsetMinutes);
             string routeName = (await _context.BusRoute.Where(r => r.BusRouteCode == busRouteCode).FirstOrDefaultAsync()).RouteName;
-            ViewData["Title"] = "Route Stops (" + routeName + " )";
+            ViewData["Title"] = string.Format("Route Stops ({0})", routeName);
             Response.Cookies.Append(cookieBusRouteName, routeName);
             Response.Cookies.Append(cookieBusRouteCode, busRouteCode);
             return View(await busServiceContext.ToListAsync());

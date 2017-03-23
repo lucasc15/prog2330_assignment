@@ -34,6 +34,7 @@
                 <a asp-action="Edit" asp-route-id="@item.BusRouteCode">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.BusRouteCode">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.BusRouteCode">Delete</a> |
+                @Html.ActionLink("Schedule", "Index", "RouteSchedules", new { id = item.BusRouteCode }, null)
             </td>
         </tr>
 }

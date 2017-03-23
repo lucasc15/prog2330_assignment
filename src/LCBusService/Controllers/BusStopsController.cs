@@ -19,7 +19,7 @@ namespace LCBusService.Controllers
         }
 
         // GET: BusStops || BusStops?orderby=value to order stops by specific field
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string message)
         {
             ViewData["Header"] = "Bus Stops";
             List<BusStop> stops;
@@ -32,6 +32,8 @@ namespace LCBusService.Controllers
                     stops = await _context.BusStop.OrderBy(bs => bs.BusStopNumber).ToListAsync();
                     break;
             }
+            // could not get sessions going with TempData so passed internal message with cookie that is deleted from RouteSelector
+            ViewData["message"] = message;
             return View(stops);
         }
 
@@ -39,24 +41,39 @@ namespace LCBusService.Controllers
         // Returns the routes for a given stop {id}; returns to BusStop index if there are no routes or an invalid ID is passes (i.e. null)
         public async Task<IActionResult> RouteSelector(int? id)
         {
+            // Redirect is there is no busStopNumber given as id
             if (id == null)
             {
                 ViewData["message"] = "Please select a valid bus stop number.";
                 return View("Index", await _context.BusStop.OrderBy(bs => bs.BusStopNumber).ToListAsync());
             }
-            var routes = await (from rs in _context.RouteStop
-                                join br in _context.BusRoute on rs.BusRouteCode equals br.BusRouteCode
-                                where rs.BusStopNumber == id
-                                select br).ToListAsync();
-            string busStopName = (await _context.BusStop.Where(bs => bs.BusStopNumber == id).FirstOrDefaultAsync()).Location;
-            if (routes.Count() < 1)
+            // Find the routes for the given stop using the routeStops table
+            var routeStops = await (_context.RouteStop.
+                Where(rs => rs.BusStopNumber == id).
+                Include(rs => rs.BusRouteCodeNavigation)).ToListAsync();
+            string busStopName;
+            try
             {
-                ViewData["message"] = string.Format("Sorry, no routes for stop: {0} - {1}", id, busStopName);
-                return View("Index", await _context.BusStop.OrderBy(bs => bs.BusStopNumber).ToListAsync());
+                busStopName = (await _context.BusStop.Where(bs => bs.BusStopNumber == id).FirstOrDefaultAsync()).Location;
+            } catch
+            {
+                // Case where there was no valid record returned
+                return RedirectToAction("Index", new { message = "Invalid stop id please select via hyperlink" });
             }
-            ViewData["Title"] = string.Format("Routes for stop: {0} - {1}", id, busStopName);
-            ViewData["BusStopRouteList"] = "true";
-            return View("~/Views/BusRoutes/Index.cshtml", routes);
+            // If there is only one route, go directly to schedule, otherwise redirect to page to choose route. Redirect to index if no routes exist
+            if (routeStops.Count() < 1)
+            {
+                ViewData["message"] = string.Format("Sorry, no routes for this stop: {0} - {1}", id, busStopName);
+                return View("Index", await _context.BusStop.OrderBy(bs => bs.BusStopNumber).ToListAsync());
+            } else if (routeStops.Count() == 1)
+            {
+                return RedirectToAction("RouteStopSchedule", "RouteSchedules", 
+                    new { routeStopid = routeStops[0].RouteStopId });
+            } else
+            {
+                ViewData["busstopnumber"] = id;
+                return View("RouteSelector", routeStops);
+            }
         }
  
         // GET: BusStops/Details/5

@@ -1,0 +1,31 @@
+@model IEnumerable<LCBusService.Models.RouteSchedule>
+
+<h2>@ViewData["header"]</h2>
+<h2>@ViewData["stop"]</h2>
+<h2>@ViewData["route"]</h2>
+
+@if (Model.Count() > 0)
+{
+    <h2>Mon-Fri</h2>
+    <ul>
+        @foreach (var item in Model)
+        {
+            if (item.IsWeekDay)
+            {
+                <li>@item.StartTime.ToString()</li>
+            }
+        }
+    </ul>
+
+    <h2>Sat-Sun & Holidays</h2>
+    <ul>
+        @foreach (var item in Model)
+        {
+            if (!item.IsWeekDay)
+            {
+                <li>@item.StartTime.ToString()</li>
+            }
+        }
+    </ul>
+}
+

@@ -4,11 +4,6 @@
     ViewData["Title"] = ViewData["Header"] + " Listing - LCBusService";
 }
 <h2>@ViewData["Header"]</h2>
-@{ if (ViewData["message"] != null)
-    {
-    <p class="alert-danger">@ViewData["message"]</p> 
-    }
-}
 <p>
     <a asp-action="Create">Create New</a>
 </p>

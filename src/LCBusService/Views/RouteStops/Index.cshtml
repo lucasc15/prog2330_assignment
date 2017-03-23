@@ -27,7 +27,7 @@
                 @Html.DisplayFor(modelItem => item.RouteStopId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BusStopNumberNavigation.Location)
+                @Html.ActionLink(item.BusStopNumberNavigation.Location.ToString(), "RouteStopSchedule", "RouteSchedules", new { routestopid = item.RouteStopId })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OffsetMinutes)

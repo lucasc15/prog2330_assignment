@@ -1,0 +1,14 @@
+@model IEnumerable<LCBusService.Models.RouteStop>
+
+@{
+    ViewData["Title"] = "RouteSelector";
+}
+
+<h2>Route Selector</h2>
+
+<form asp-controller="RouteSchedules" asp-action="RouteStopSchedule" method="get">
+    @foreach (var item in Model) {
+        <label>@item.BusRouteCodeNavigation.RouteName<input style="margin-left: 15px;" type="radio" name="routestopid" value="@item.RouteStopId"/></label><br/>
+    }
+    <input type="submit" value="See Route Schedule" />
+</form>
