@@ -45,7 +45,6 @@ namespace LCBusService.Controllers
         // GET: Drivers/Create
         public IActionResult Create()
         {
-            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode");
             return View();
         }
 
@@ -60,6 +59,7 @@ namespace LCBusService.Controllers
             {
                 _context.Add(driver);
                 await _context.SaveChangesAsync();
+                ViewData["message"] = "Successfully made driver";
                 return RedirectToAction("Index");
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", driver.ProvinceCode);
@@ -79,6 +79,7 @@ namespace LCBusService.Controllers
             {
                 return NotFound();
             }
+            ViewData["ProvinceCode"] = new SelectList(_context.Province.OrderBy(p => p.ProvinceCode), "ProvinceCode", "ProvinceCode");
             return View(driver);
         }
 
@@ -111,8 +112,10 @@ namespace LCBusService.Controllers
                         throw;
                     }
                 }
+                ViewData["message"] = "Successfully editied driver";
                 return RedirectToAction("Index");
             }
+            ViewData["ProvinceCode"] = new SelectList(_context.Province.OrderBy(p => p.ProvinceCode), "ProvinceCode", "ProvinceCode");
             return View(driver);
         }
 
@@ -145,14 +148,14 @@ namespace LCBusService.Controllers
                 _context.Driver.Remove(driver);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
-            } catch
+            } catch (Exception e)
             {
                 if (driver != null)
                 {
                     ViewData["message"] = "Error removing the driver as the are still assigned routes, please remove routes and try again";
                     return View(driver);
                 }
-                ViewData["message"] = "Unknown error, could not delete driver. Please try again later";
+                ViewData["message"] = string.Format("Unknown error, could not delete driver. Please try again later. Error: {0}", e.Message);
                 return RedirectToAction("Index");
             }
         }

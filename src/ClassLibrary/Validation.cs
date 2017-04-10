@@ -33,7 +33,7 @@ namespace ClassLibrary
 
     public class CanadianPostalCode: ValidationAttribute
     {
-        string moreInfo = "https://en.wikipedia.org/wiki/Postal_codes_in_Canada#Number_of_possible_postal_codes";
+        string moreInfo = "<a>https://en.wikipedia.org/wiki/Postal_codes_in_Canada#Number_of_possible_postal_codes</a>";
         Regex postalCodePattern = new Regex(@"^[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ][\s-]?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]$");
         public CanadianPostalCode()
         {
@@ -42,7 +42,7 @@ namespace ClassLibrary
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            string postalCode = (string)value;
+            string postalCode = ((string)value).ToUpper();
             // Because it is optional
             if (postalCode == "" || postalCode == null)
             {

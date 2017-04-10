@@ -98,6 +98,7 @@ namespace LCBusService.Models
             {
                 return true;
             }
+            if (phoneNumber.Length < 10) { return false; }
             char[] digits = new char[10];
             int idx = 0;
             for (int i = 0; i < phoneNumber.Length; i++)
@@ -116,6 +117,10 @@ namespace LCBusService.Models
         }
         private string formatPhoneNumber(string phoneNumber)
         {
+            if (phoneNumber == null || phoneNumber == "")
+            {
+                return phoneNumber;
+            }
             StringBuilder formatted = new StringBuilder(10);
             int stringIdx = 0;
             for (int i = 0; i < phoneNumber.Length; i++)
@@ -156,6 +161,7 @@ namespace LCBusService.Models
         public string City { get; set; }
         [Display(Name = "Postal Code")]
         [ClassLibrary.CanadianPostalCode()]
+        [Required()]
         public string PostalCode { get; set; }
         [Remote("ProvinceCodeRemoteValidator", "Drivers")]
         [Display(Name = "Province")]
@@ -164,6 +170,7 @@ namespace LCBusService.Models
         [Display(Name = "Date Hired")]
         [DisplayFormat(DataFormatString = "{0:d MMM yyyy}", ApplyFormatInEditMode = true)]
         [ClassLibrary.CannotBeInFuture()]
+        [Required()]
         public DateTime? DateHired { get; set; }
     }
 }
