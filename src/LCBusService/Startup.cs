@@ -44,6 +44,8 @@ namespace LCBusService
             services.AddDbContext<BusServiceContext>(
                 options => options.UseSqlServer(connectionString)
             );
+            // Create an instance of the context to be used outside of controllers
+            Context.MakeContext(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
